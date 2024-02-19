@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"lib": [
+      "esnext",
+      "dom"
+    ],
+		"module": "esnext",
+    "target": "esnext",
+		"moduleResolution": "node",
+		"noEmitOnError": false,
+		"noErrorTruncation": true,
+		"noImplicitAny": true,
+		"resolveJsonModule": true,
+		"strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "declaration": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
