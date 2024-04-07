@@ -4,11 +4,13 @@
   "description": "An ES modules implementation to get EXIF of an image",
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "prepublishOnly": "npm run build"
   },
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/exifly.umd.js",
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/winjeysong/exifly.git"
