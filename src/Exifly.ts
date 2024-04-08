@@ -36,7 +36,7 @@ export default class Exifly {
   }
 
   private readTags(file: DataView, tiffStart: number, dirStart: number, strings: Record<string, string>, bigEnd: boolean) {
-    var entries = file.getUint16(dirStart, !bigEnd),
+    let entries = file.getUint16(dirStart, !bigEnd),
       tags: Record<string, string | number | Number | Number[] | undefined> = {},
       entryOffset, tag,
       i;
@@ -51,11 +51,11 @@ export default class Exifly {
   }
 
   private readTagValue(file: DataView, entryOffset: number, tiffStart: number, dirStart: number, bigEnd: boolean) {
-    var type = file.getUint16(entryOffset + 2, !bigEnd),
+    let type = file.getUint16(entryOffset + 2, !bigEnd),
       numValues = file.getUint32(entryOffset + 4, !bigEnd),
       valueOffset = file.getUint32(entryOffset + 8, !bigEnd) + tiffStart,
       offset,
-      vals, val, n,
+      vals, val,
       numerator, denominator;
 
     switch (type) {
@@ -66,7 +66,7 @@ export default class Exifly {
         } else {
           offset = numValues > 4 ? valueOffset : (entryOffset + 8);
           vals = [];
-          for (n = 0; n < numValues; n++) {
+          for (let n = 0; n < numValues; n++) {
             vals[n] = file.getUint8(offset + n);
           }
           return vals;
@@ -82,7 +82,7 @@ export default class Exifly {
         } else {
           offset = numValues > 2 ? valueOffset : (entryOffset + 8);
           vals = [];
-          for (n = 0; n < numValues; n++) {
+          for (let n = 0; n < numValues; n++) {
             vals[n] = file.getUint16(offset + 2 * n, !bigEnd);
           }
           return vals;
@@ -93,7 +93,7 @@ export default class Exifly {
           return file.getUint32(entryOffset + 8, !bigEnd);
         } else {
           vals = [];
-          for (n = 0; n < numValues; n++) {
+          for (let n = 0; n < numValues; n++) {
             vals[n] = file.getUint32(valueOffset + 4 * n, !bigEnd);
           }
           return vals;
@@ -111,7 +111,7 @@ export default class Exifly {
           return val;
         } else {
           vals = [];
-          for (n = 0; n < numValues; n++) {
+          for (let n = 0; n < numValues; n++) {
             numerator = file.getUint32(valueOffset + 8 * n, !bigEnd);
             denominator = file.getUint32(valueOffset + 4 + 8 * n, !bigEnd);
             vals[n] = new Number(numerator / denominator);
@@ -128,7 +128,7 @@ export default class Exifly {
           return file.getInt32(entryOffset + 8, !bigEnd);
         } else {
           vals = [];
-          for (n = 0; n < numValues; n++) {
+          for (let n = 0; n < numValues; n++) {
             vals[n] = file.getInt32(valueOffset + 4 * n, !bigEnd);
           }
           return vals;
@@ -139,7 +139,7 @@ export default class Exifly {
           return file.getInt32(valueOffset, !bigEnd) / file.getInt32(valueOffset + 4, !bigEnd);
         } else {
           vals = [];
-          for (n = 0; n < numValues; n++) {
+          for (let n = 0; n < numValues; n++) {
             vals[n] = file.getInt32(valueOffset + 8 * n, !bigEnd) / file.getInt32(valueOffset + 4 + 8 * n, !bigEnd);
           }
           return vals;
@@ -148,15 +148,15 @@ export default class Exifly {
   }
 
   private getStringFromDB(buffer: DataView, start: number, length: number) {
-    var outstr = "";
-    for (var n = start; n < start + length; n++) {
+    let outstr = "";
+    for (let n = start; n < start + length; n++) {
       outstr += String.fromCharCode(buffer.getUint8(n));
     }
     return outstr;
   }
 
   private readEXIFData(file: DataView, start: number) {
-    var bigEnd,
+    let bigEnd,
       tags, tag,
       exifData, gpsData;
 
@@ -175,7 +175,7 @@ export default class Exifly {
       return false;
     }
 
-    var firstIFDOffset = file.getUint32(start + 4, !bigEnd);
+    const firstIFDOffset = file.getUint32(start + 4, !bigEnd);
 
     if (firstIFDOffset < 0x00000008) {
       if (this.opts.debug) console.log("Not valid TIFF data! (First offset less than 8)");
@@ -253,14 +253,14 @@ export default class Exifly {
 
   //Based on HEIC format decoded via https://github.com/exiftool/exiftool
   heic() {
-    var dataView = new DataView(this.buf);
-    var ftypeSize = dataView.getUint32(0); // size of ftype box
-    var metadataSize = dataView.getUint32(ftypeSize); //size of metadata box
+    const dataView = new DataView(this.buf);
+    const ftypeSize = dataView.getUint32(0); // size of ftype box
+    const metadataSize = dataView.getUint32(ftypeSize); //size of metadata box
 
     //Scan through metadata until we find (a) Exif, (b) iloc
-    var exifOffset = -1;
-    var ilocOffset = -1;
-    for (var i = ftypeSize; i < metadataSize + ftypeSize; i++) {
+    let exifOffset = -1;
+    let ilocOffset = -1;
+    for (let i = ftypeSize; i < metadataSize + ftypeSize; i++) {
       if (this.getStringFromDB(dataView, i, 4) == "Exif") {
         exifOffset = i;
       } else if (this.getStringFromDB(dataView, i, 4) == "iloc") {
@@ -272,17 +272,17 @@ export default class Exifly {
       return null;
     }
 
-    var exifItemIndex = dataView.getUint16(exifOffset - 4);
+    const exifItemIndex = dataView.getUint16(exifOffset - 4);
 
     //Scan through ilocs to find exif item location
-    for (var i = ilocOffset + 12; i < metadataSize + ftypeSize; i += 16) {
-      var itemIndex = dataView.getUint16(i);
+    for (let i = ilocOffset + 12; i < metadataSize + ftypeSize; i += 16) {
+      const itemIndex = dataView.getUint16(i);
       if (itemIndex == exifItemIndex) {
-        var exifLocation = dataView.getUint32(i + 8);
-        var exifSize = dataView.getUint32(i + 12);
+        const exifLocation = dataView.getUint32(i + 8);
+        const exifSize = dataView.getUint32(i + 12);
         //Check prefix at exif exifOffset
-        var prefixSize = 4 + dataView.getUint32(exifLocation);
-        var exifOffset = exifLocation + prefixSize;
+        const prefixSize = 4 + dataView.getUint32(exifLocation);
+        exifOffset = exifLocation + prefixSize;
 
         return this.readEXIFData(dataView, exifOffset);
       }
@@ -296,12 +296,12 @@ export default class Exifly {
    */
   jpeg() {
     const data = this.buf;
-    var dataView = new DataView(data);
+    const dataView = new DataView(data);
     if ((dataView.getUint8(0) != 0xFF) || (dataView.getUint8(1) != 0xD8)) {
       if (this.opts.debug) console.log("Not a valid JPEG");
       return false; // not a valid jpeg
     }
-    var offset = 2,
+    let offset = 2,
       length = data.byteLength,
       marker;
     while (offset < length) {
