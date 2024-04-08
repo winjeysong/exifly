@@ -3,6 +3,51 @@
 An ES modules implementation based on [exif-heic-js](https://github.com/exif-heic-js/exif-heic-js) to get EXIF of an image. 
 
 ## Example
+
+### ESM
+
+```jsx
+import { useState } from 'react';
+import * as Exifly from "exifly";
+
+export default function () {
+    const [tags, setTags] = useState('');
+    const handleFileChange = e => {
+        let extension = e.target.files[0].name.toLowerCase().split('.').at(-1);
+        let reader = new FileReader();
+        
+        reader.onload = function () {
+          const exifly = new Exifly.load(reader.result);
+          if (extension === 'heic') {
+              tags = exifly.heic()
+          } else if (extension === 'jpg' || extension === 'jpeg') {
+              tags = exifly.jpeg();
+          } else {
+              tags = exifly.raw();
+          }
+          
+          console.log(tags);
+          setTags(JSON.stringify(tags, null, 2));
+        };
+        
+        reader.readAsArrayBuffer(e.target.files[0]);
+    }
+    
+    return (
+        <>
+            <div>
+                <input type="file" id="image" accept=".heic,.jpeg,.jpg" onChange={handleFileChange} />
+            </div>
+            <div>
+                <pre>{tags}</pre>
+            </div>
+        </>
+    )
+}
+```
+
+### UMD
+
 ```html
 <!DOCTYPE html>
 <html>
