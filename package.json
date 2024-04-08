@@ -10,6 +10,7 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/exifly.umd.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
