@@ -1,6 +1,6 @@
 {
   "name": "exifly",
-  "version": "0.1.0-2",
+  "version": "0.1.0",
   "description": "An ES modules implementation to get EXIF of an image",
   "scripts": {
     "build": "rollup -c",
