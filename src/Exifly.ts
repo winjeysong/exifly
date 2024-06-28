@@ -254,9 +254,13 @@ export default class Exifly {
           case EXIF_TAGS.EXIF_IFD.FlashpixVersion:
             // @ts-ignore
             exifData[tag] = String.fromCharCode(
+              // @ts-ignore
               exifData[tag][0],
+              // @ts-ignore
               exifData[tag][1],
+              // @ts-ignore
               exifData[tag][2],
+              // @ts-ignore
               exifData[tag][3],
             );
             break;
@@ -291,15 +295,16 @@ export default class Exifly {
           case EXIF_TAGS.GPS_INFO_IFD.GPSVersionID:
             // @ts-ignore
             gpsData[tag] =
+              // @ts-ignore
               gpsData[tag][0] +
-              // @ts-ignore
               '.' +
+              // @ts-ignore
               gpsData[tag][1] +
-              // @ts-ignore
               '.' +
+              // @ts-ignore
               gpsData[tag][2] +
-              // @ts-ignore
               '.' +
+              // @ts-ignore
               gpsData[tag][3];
             break;
         }
